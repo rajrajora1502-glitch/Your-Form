@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SheetJS for Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 15px; background-color: #f2f2f2; }
+        h2 { text-align: center; color: #333; }
+        form { background-color: white; padding: 15px; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
+        input { width: 100%; padding: 10px; margin: 6px 0; border-radius: 8px; border: 1px solid #ccc; }
+        button { width: 100%; padding: 12px; border-radius: 8px; background-color: #4CAF50; color: white; border: none; font-size: 16px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<h2>Customer Form</h2>
+
+<form id="customerForm">
+  <input type="text" id="name" placeholder="Enter Name">
+  <input type="text" id="father" placeholder="Enter Father Name">
+  <input type="text" id="mother" placeholder="Enter Mother Name">
+  <input type="text" id="spouse" placeholder="Enter Spouse Name">
+  <input type="text" id="dob" placeholder="Enter DOB">
+  <input type="text" id="pan" placeholder="Enter PAN Number">
+  <input type="text" id="amobile" placeholder="Enter Mobile Number">
+  <input type="text" id="currentAddress" placeholder="Enter Current Address">
+  <input type="text" id="permanentAddress" placeholder="Enter Permanent Address">
+  <input type="text" id="rentedOwned" placeholder="Rented / Owned">
+  <input type="text" id="officeName" placeholder="Enter Office Name">
+  <input type="text" id="officeAddress" placeholder="Enter Office Address">
+  <input type="text" id="designation" placeholder="Enter Designation">
+  <input type="text" id="employment" placeholder="Enter Current Employment">
+  <input type="text" id="totalexp" placeholder="Enter Total Experience">
+  <input type="text" id="pmail" placeholder="Enter Personal Email">
+  <input type="text" id="officemail" placeholder="Enter Official Email">
+  <input type="text" id="bankname" placeholder="Enter Bank Name">
+  <input type="text" id="ref1" placeholder="Reference 1 Name">
+  <input type="text" id="refmob1" placeholder="Reference 1 Mobile">
+  <input type="text" id="refrel1" placeholder="Reference 1 Relation">
+  <input type="text" id="refadd1" placeholder="Reference 1 Address">
+  <input type="text" id="ref2" placeholder="Reference 2 Name">
+  <input type="text" id="refmob2" placeholder="Reference 2 Mobile">
+  <input type="text" id="refrel2" placeholder="Reference 2 Relation">
+  <input type="text" id="refadd2" placeholder="Reference 2 Address">
+  <button type="button" onclick="saveAndShare()">Save & Download</button>
+</form>
+
+<script>
+async function saveAndShare() {
+    // Create workbook
+    var wb = XLSX.utils.book_new();
+    var ws_data = [
+        ["Field","Value"],
+        ["Name", document.getElementById("name").value],
+        ["Father Name", document.getElementById("father").value],
+        ["Mother Name", document.getElementById("mother").value],
+        ["Spouse Name", document.getElementById("spouse").value],
+        ["DOB", document.getElementById("dob").value],
+        ["PAN Number", document.getElementById("pan").value],
+        ["Mobile Number", document.getElementById("amobile").value],
+        ["Current Address", document.getElementById("currentAddress").value],
+        ["Permanent Address", document.getElementById("permanentAddress").value],
+        ["Rented / Owned", document.getElementById("rentedOwned").value],
+        ["Office Name", document.getElementById("officeName").value],
+        ["Office Address", document.getElementById("officeAddress").value],
+        ["Designation", document.getElementById("designation").value],
+        ["Current Employment", document.getElementById("employment").value],
+        ["Total Experience", document.getElementById("totalexp").value],
+        ["Personal Email", document.getElementById("pmail").value],
+        ["Official Email", document.getElementById("officemail").value],
+        ["Bank Name", document.getElementById("bankname").value],
+        ["Reference 1 Name", document.getElementById("ref1").value],
+        ["Reference 1 Mobile", document.getElementById("refmob1").value],
+        ["Reference 1 Relation", document.getElementById("refrel1").value],
+        ["Reference 1 Address", document.getElementById("refadd1").value],
+        ["Reference 2 Name", document.getElementById("ref2").value],
+        ["Reference 2 Mobile", document.getElementById("refmob2").value],
+        ["Reference 2 Relation", document.getElementById("refrel2").value],
+        ["Reference 2 Address", document.getElementById("refadd2").value],
+    ];
+
+    var ws = XLSX.utils.aoa_to_sheet(ws_data);
+    XLSX.utils.book_append_sheet(wb, ws, "Customer");
+
+    var filename = document.getElementById("name").value || "Customer";
+
+    // Excel download
+    XLSX.writeFile(wb, filename + ".xlsx");
+
+    // Optional Share (Web Share API)
+    if (navigator.share) {
+        try {
+            const fileBlob = new Blob([XLSX.write(wb, {bookType:'xlsx', type:'array'})], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+            const file = new File([fileBlob], filename + ".xlsx", { type: fileBlob.type });
+            await navigator.share({
+                title: 'Customer Excel',
+                text: 'Here is the customer data Excel',
+                files: [file],
+            });
+            console.log("Shared successfully");
+        } catch (err) {
+            console.log("Sharing failed:", err);
+        }
+    } else {
+        alert("Excel downloaded! Share feature not supported in this browser.");
+    }
+}
+</script>
+
+</body>
+</html>
